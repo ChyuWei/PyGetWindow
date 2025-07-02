@@ -28,6 +28,7 @@ class PyGetWindowException(Exception):
     encounter a problem. If PyGetWindow raises an exception that isn't
     this class, that indicates a bug in the module.
     """
+
     pass
 
 
@@ -54,15 +55,26 @@ class BaseWindow:
             r = self._getWindowRect()
             self._rect._left = r.left  # Setting _left directly to skip the onRead.
             self._rect._top = r.top  # Setting _top directly to skip the onRead.
-            self._rect._width = r.right - r.left  # Setting _width directly to skip the onRead.
-            self._rect._height = r.bottom - r.top  # Setting _height directly to skip the onRead.
+            self._rect._width = (
+                r.right - r.left
+            )  # Setting _width directly to skip the onRead.
+            self._rect._height = (
+                r.bottom - r.top
+            )  # Setting _height directly to skip the onRead.
 
         def _onChange(oldBox, newBox):
             self.moveTo(newBox.left, newBox.top)
             self.resizeTo(newBox.width, newBox.height)
 
         r = self._getWindowRect()
-        self._rect = pyrect.Rect(r.left, r.top, r.right - r.left, r.bottom - r.top, onChange=_onChange, onRead=_onRead)
+        self._rect = pyrect.Rect(
+            r.left,
+            r.top,
+            r.right - r.left,
+            r.bottom - r.top,
+            onChange=_onChange,
+            onRead=_onRead,
+        )
 
     def _getWindowRect(self):
         raise NotImplementedError
@@ -327,8 +339,14 @@ class BaseWindow:
 
 
 if sys.platform == "darwin":
-    # raise NotImplementedError('PyGetWindow currently does not support macOS. If you have Appkit/Cocoa knowledge, please contribute! https://github.com/asweigart/pygetwindow') # TODO - implement mac
-    from ._pygetwindow_macos import *
+    from ._pygetwindow_macos import (
+        MacOSWindow,
+        getActiveWindow,
+        getWindowsAt,
+        getWindowsWithTitle,
+        getAllWindows,
+        getAllTitles,
+    )
 
     Window = MacOSWindow
 elif sys.platform == "win32":

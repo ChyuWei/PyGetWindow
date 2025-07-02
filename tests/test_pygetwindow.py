@@ -15,25 +15,29 @@ try:
     else:
         import tkinter as tk
 
-    rootWindowPosition = '+300+200'
+    rootWindowPosition = "+300+200"
     if tk.TkVersion < 8.0:
-        raise RuntimeError('You are running Tk version: ' + str(tk.TkVersion) + 'You must be using Tk version 8.0 or greater to run this test.')
+        raise RuntimeError(
+            "You are running Tk version: "
+            + str(tk.TkVersion)
+            + "You must be using Tk version 8.0 or greater to run this test."
+        )
 except ImportError:
-    raise RuntimeError('Could not import tkinter, which is required for these tests.')
+    raise RuntimeError("Could not import tkinter, which is required for these tests.")
 
 
-
+@pytest.mark.skipif(sys.platform != "win32", reason="requires Windows")
 def test_basic_win32():
-    subprocess.Popen('notepad')
+    subprocess.Popen("notepad")
     time.sleep(0.5)
 
-    testWindows = pygetwindow.getWindowsWithTitle('Untitled - Notepad')
+    testWindows = pygetwindow.getWindowsWithTitle("Untitled - Notepad")
     assert len(testWindows) == 1
 
-    npw = testWindows[0] # testWindows[0] is the notepad window
+    npw = testWindows[0]  # testWindows[0] is the notepad window
 
     # Test maximize/minimize/restore.
-    if npw.isMaximized: # Make sure it starts un-maximized
+    if npw.isMaximized:  # Make sure it starts un-maximized
         npw.restore()
 
     assert not npw.isMaximized
@@ -138,10 +142,61 @@ def test_basic_win32():
     npw.size = (301, 201)
     assert npw.size == (301, 201)
 
-
     # Test closing
     npw.close()
 
 
-if __name__ == '__main__':
+@pytest.mark.skipif(sys.platform != "darwin", reason="requires macOS")
+def test_basic_macos():
+    subprocess.Popen(["open", "-a", "Safari"])
+
+    testWindows = []
+    for i in range(10):
+        time.sleep(1)
+        testWindows = pygetwindow.getWindowsWithTitle("Safari")
+        if len(testWindows) > 0:
+            break
+    assert len(testWindows) >= 1
+
+    tew = testWindows[0]
+
+    tew.maximize()
+    time.sleep(0.5)
+    assert tew.isMaximized
+
+    tew.restore()
+    time.sleep(0.5)
+    assert not tew.isMaximized
+
+    tew.minimize()
+    time.sleep(0.5)
+    assert tew.isMinimized
+
+    tew.restore()
+    time.sleep(0.5)
+    assert not tew.isMinimized
+
+    # # Test resizing
+    tew.resizeTo(600, 600)
+    time.sleep(0.5)
+    assert tew.size == (600, 600)
+
+    tew.resizeRel(10, 20)
+    time.sleep(0.5)
+    assert tew.size == (610, 620)
+
+    # # Test moving
+    tew.moveTo(100, 200)
+    time.sleep(0.5)
+    assert tew.topleft == (100, 200)
+
+    tew.moveRel(1, 2)
+    time.sleep(0.5)
+    assert tew.topleft == (101, 202)
+
+    # Test closing
+    tew.close()
+
+
+if __name__ == "__main__":
     pytest.main()

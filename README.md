@@ -1,24 +1,22 @@
-PyGetWindow
-===========
+# PyGetWindow
 
 A simple, cross-platform module for obtaining GUI information on and controlling application's windows.
 
-
 Still under development. Currently only the Windows platform is implemented. If you want to help contribute, please contact al@inventwithpython.com!
 
-
-Install
--------
+## Install
 
     pip install pygetwindow
 
+## For MacOS
 
-Examples
---------
+- enable app(Terminal or others) in Privacy & Security > Accessibility
+
+## Examples
 
 (For this example, I'm using Windows and opened the Notepad application, which has a title of "Untitled - Notepad". Most of the effects of these functions can't be seen in text.)
 
-PyGetWindow has functions for obtaining ``Window`` objects from a place on the screen, from the window title, or just getting all windows. (``hWnd`` is specific to the Windows platform.)
+PyGetWindow has functions for obtaining `Window` objects from a place on the screen, from the window title, or just getting all windows. (`hWnd` is specific to the Windows platform.)
 
     >>> import pygetwindow as gw
     >>> gw.getAllTitles()
@@ -34,8 +32,7 @@ PyGetWindow has functions for obtaining ``Window`` objects from a place on the s
     >>> gw.getWindowsAt(10, 10)
     (Win32Window(hWnd=67206), Win32Window(hWnd=66754), Win32Window(hWnd=329210), Win32Window(hWnd=1114374), Win32Window(hWnd=852550), Win32Window(hWnd=132508), Win32Window(hWnd=66964), Win32Window(hWnd=66882), Win32Window(hWnd=197282), Win32Window(hWnd=393880), Win32Window(hWnd=66810), Win32Window(hWnd=328466), Win32Window(hWnd=395034), Win32Window(hWnd=132928), Win32Window(hWnd=65882))
 
-
-``Window`` objects can be minimized/maximized/restored/activated/resized/moved/closed and also have attributes for their current position, size, and state.
+`Window` objects can be minimized/maximized/restored/activated/resized/moved/closed and also have attributes for their current position, size, and state.
 
     >>> notepadWindow = gw.getWindowsWithTitle('Untitled')[0]
     >>> notepadWindow.isMaximized
@@ -68,7 +65,6 @@ PyGetWindow has functions for obtaining ``Window`` objects from a place on the s
     >>> notepadWindow.close()
     >>>
 
-Support
--------
+## Support
 
 If you find this project helpful and would like to support its development, [consider donating to its creator on Patreon](https://www.patreon.com/AlSweigart).
